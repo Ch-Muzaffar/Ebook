@@ -36,6 +36,7 @@
     "undici": "7.29.0"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "5.16.5",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/pg": "8.23.1",

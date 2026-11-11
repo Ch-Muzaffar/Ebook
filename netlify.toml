@@ -9,3 +9,9 @@
   # Netlify fails a build if an environment variable's value appears in the output. These values
   # are public by design (shipped to browsers) or are plain IDs/flags, so they're excluded from that scan.
   SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_SITE_URL,NEXT_PUBLIC_GTM_ID,LEMONSQUEEZY_STORE_ID,LEMONSQUEEZY_VARIANT_ID,LEMONSQUEEZY_TEST_MODE,ADMIN_EMAIL,EMAIL_FROM"
+
+# Netlify's Next.js adapter (OpenNext). It turns the build into server functions — without it the
+# site is uploaded as plain files and every page 404s. Declared explicitly (and pinned in
+# package.json) because Netlify's automatic install did not run for this project.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
