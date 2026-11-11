@@ -63,7 +63,7 @@ These providers may store data in the United States or other countries. Where re
 
 **Essential cookies** keep you signed in and remember your shopping bag. They are necessary for the site to work and are always on.
 
-**Analytics and advertising cookies** are off until you choose **Accept** in the cookie banner. If you accept, we load Google Tag Manager, which runs Google Analytics to measure visits, and — once advertising is enabled — Google AdSense, which may use cookies to show and measure ads. Google's use of data is described in [How Google uses information from sites that use its services](https://policies.google.com/technologies/partner-sites). You can opt out of personalized advertising at [Google Ads Settings](https://adssettings.google.com).
+**Analytics and advertising cookies** are off until you choose **Accept** in the cookie banner. We use Google Tag Manager with Google Consent Mode: Google's tags load with analytics and advertising storage set to *denied*, so they set no analytics or advertising cookies and store nothing on your device until you accept; without consent Google may receive limited, cookieless signals (such as a page view without identifiers). If you accept, Google Analytics measures visits and — once advertising is enabled — Google AdSense may use cookies to show and measure ads. Google's use of data is described in [How Google uses information from sites that use its services](https://policies.google.com/technologies/partner-sites). You can opt out of personalized advertising at [Google Ads Settings](https://adssettings.google.com).
 
 You can change your choice at any time using **Cookie settings** at the bottom of every page. Your choice is stored in your own browser.
 

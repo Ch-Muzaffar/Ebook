@@ -3,7 +3,7 @@ import { Container } from "./container";
 import { PageHeader } from "./page-header";
 
 /** Policy text effective date — update whenever the wording of a legal page changes. */
-export const LEGAL_UPDATED = "November 11, 2026";
+export const LEGAL_UPDATED = "November 12, 2026";
 
 /** Shared layout for Privacy / Terms / Refund: title block + 760px reading column of Markdown. */
 export function LegalPage({ title, description, markdown }: { title: string; description?: string; markdown: string }) {

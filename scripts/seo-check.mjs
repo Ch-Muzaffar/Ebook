@@ -66,20 +66,27 @@ try {
   check("privacy has a #cookies section", (await html("/privacy")).includes('id="cookies"'));
 
   // ------------------------------------------------------------ consent + GTM
-  const gtm = () => b.evaluate(`!!document.querySelector('script[data-gtm]')`);
+  // Google Consent Mode v2: GTM is in the HTML (detectable), but analytics/ads storage starts
+  // "denied" and only switches to "granted" when the visitor accepts.
+  const gtm = () => b.evaluate(`!!document.querySelector('script[data-gtm], script#gtm-init')`);
+  const consentState = () =>
+    b.evaluate(`(() => { const c = (window.dataLayer || []).filter(a => a && a[0] === 'consent'); const l = c[c.length - 1];
+      return l ? l[1] + ':' + l[2].analytics_storage + '/' + l[2].ad_storage : 'none'; })()`);
+  check("GTM container is in the page HTML (detectable by Google)", /GTM-[A-Z0-9]{4,12}/.test(home) && home.includes("googletagmanager.com/gtm.js"));
   await b.go("/", DEVICES.desktop, { settle: 1500 });
   check("cookie banner shown on first visit", await wait(`document.querySelector('[data-testid=cookie-banner]')`, 10000));
-  check("no Tag Manager before consent", !(await gtm()) && !(await b.evaluate(`!!window.dataLayer`)));
+  check("before consent: Google storage defaults to denied", (await gtm()) && (await consentState()) === "default:denied/denied", await consentState());
   await b.evaluate(`[...document.querySelectorAll('[data-testid=cookie-banner] button')].find(x => x.textContent.trim() === 'Reject').click(); true`);
   check("reject hides the banner", await wait(`!document.querySelector('[data-testid=cookie-banner]')`, 5000));
+  check("reject sends consent update: denied", (await consentState()) === "update:denied/denied", await consentState());
   await b.go("/books", DEVICES.desktop, { settle: 1200 });
-  check("after reject: no banner and no Tag Manager on next page", !(await b.evaluate(`!!document.querySelector('[data-testid=cookie-banner]')`)) && !(await gtm()));
+  check("after reject: no banner, storage stays denied on next page", !(await b.evaluate(`!!document.querySelector('[data-testid=cookie-banner]')`)) && (await consentState()) === "default:denied/denied", await consentState());
   await b.evaluate(`[...document.querySelectorAll('footer button')].find(x => x.textContent.trim() === 'Cookie settings').click(); true`);
   check("footer 'Cookie settings' reopens the banner", await wait(`document.querySelector('[data-testid=cookie-banner]')`, 5000));
   await b.evaluate(`[...document.querySelectorAll('[data-testid=cookie-banner] button')].find(x => x.textContent.trim() === 'Accept').click(); true`);
-  check("accept loads Tag Manager (GTM- container)", await wait(`document.querySelector('script[data-gtm^="GTM-"]') && window.dataLayer?.some(e => e.event === 'gtm.js')`, 5000));
+  check("accept sends consent update: granted", await wait(`(() => { const c = (window.dataLayer || []).filter(a => a && a[0] === 'consent'); const l = c[c.length - 1]; return l && l[1] === 'update' && l[2].analytics_storage === 'granted'; })()`, 5000), await consentState());
   await b.go("/about", DEVICES.desktop, { settle: 1200 });
-  check("consent remembered across pages", (await gtm()) && !(await b.evaluate(`!!document.querySelector('[data-testid=cookie-banner]')`)));
+  check("consent remembered across pages (granted on load, no banner)", (await consentState()) === "update:granted/granted" && !(await b.evaluate(`!!document.querySelector('[data-testid=cookie-banner]')`)), await consentState());
   check("no ad units while ads are disabled", (await b.evaluate(`document.querySelectorAll('ins.adsbygoogle').length`)) === 0 && !home.includes("Advertisement"));
 
   // ------------------------------------------------------------ admin: advertising + analytics

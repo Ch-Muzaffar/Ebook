@@ -45,7 +45,15 @@ export function setConsent(value: "granted" | "denied" | null) {
   } catch {
     /* ignore */
   }
-  // Scripts already loaded can't be unloaded — a reload guarantees they're gone after withdrawal.
+  // Google Consent Mode v2: tell Google tags (loaded with everything "denied") what was chosen.
+  const state = value === "granted" ? "granted" : "denied";
+  (window as Window & { gtag?: (...args: unknown[]) => void }).gtag?.("consent", "update", {
+    ad_storage: state,
+    ad_user_data: state,
+    ad_personalization: state,
+    analytics_storage: state,
+  });
+  // Scripts already loaded (e.g. ads) can't be unloaded — a reload guarantees a clean page after withdrawal.
   if (before === "granted" && value === "denied") {
     window.location.reload();
     return;

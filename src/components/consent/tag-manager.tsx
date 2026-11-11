@@ -1,42 +1,45 @@
-"use client";
+import { NoTracking } from "./no-tracking";
 
-import { useEffect } from "react";
-import { useConsent } from "./consent";
-
-declare global {
-  interface Window {
-    dataLayer?: unknown[];
-  }
-}
+export { NoTracking };
 
 /**
- * Google Tag Manager — injected only after the visitor accepts cookies. Mounted in the public
- * site layout only, so it never runs on /admin. GA4 is configured inside GTM (a "Google tag"),
- * whose enhanced measurement records client-side navigations as page views.
+ * Google Tag Manager with Google Consent Mode v2 (the setup Google recommends):
+ *
+ * - The standard GTM snippet is in the page HTML on every public page, so Google Analytics /
+ *   Tag Assistant can detect the container.
+ * - BEFORE it loads, consent defaults are set to "denied" for analytics and advertising storage:
+ *   Google tags set no cookies and store nothing until the visitor clicks "Accept" in the cookie
+ *   banner, which sends a consent "update" to "granted" (see setConsent in consent.tsx). A visitor
+ *   who accepted earlier is granted immediately on later page loads.
+ * - Mounted only in the public site layout, so it never runs in /admin.
+ *
+ * GA4 itself is configured inside GTM (a "Google tag" with the G-… measurement ID).
  */
-/**
- * Mounted in the admin layout. Tag Manager can't be unloaded, so if the visitor arrived by a
- * client-side navigation from a public page where it was running, reload into a clean document.
- */
-export function NoTracking() {
-  useEffect(() => {
-    if (document.querySelector("script[data-gtm]")) window.location.reload();
-  }, []);
-  return null;
-}
-
 export function TagManager({ id }: { id?: string }) {
-  const consent = useConsent();
-  useEffect(() => {
-    if (!id || consent !== "granted") return;
-    if (document.querySelector(`script[data-gtm="${id}"]`)) return;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
-    const s = document.createElement("script");
-    s.async = true;
-    s.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`;
-    s.dataset.gtm = id;
-    document.head.appendChild(s);
-  }, [id, consent]);
-  return null;
+  if (!id) return null;
+  const init = [
+    "window.dataLayer=window.dataLayer||[];",
+    "function gtag(){dataLayer.push(arguments);}window.gtag=gtag;",
+    "gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',functionality_storage:'granted',security_storage:'granted',wait_for_update:500});",
+    "try{if(localStorage.getItem('dt-consent-v1')==='granted')gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});}catch(e){}",
+    // Standard GTM snippet (inline, so it always runs AFTER the consent defaults above).
+    "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});",
+    "var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;",
+    "j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;j.setAttribute('data-gtm',i);f.parentNode.insertBefore(j,f);",
+    `})(window,document,'script','dataLayer',${JSON.stringify(id)});`,
+  ].join("");
+  return (
+    <>
+      <script id="gtm-init" dangerouslySetInnerHTML={{ __html: init }} />
+      <noscript>
+        <iframe
+          title="Google Tag Manager"
+          src={`https://www.googletagmanager.com/ns.html?id=${encodeURIComponent(id)}`}
+          height="0"
+          width="0"
+          style={{ display: "none", visibility: "hidden" }}
+        />
+      </noscript>
+    </>
+  );
 }
