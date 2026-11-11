@@ -87,8 +87,17 @@ try {
   await createUser(admin.email, admin.password, { role: "admin", name: "QA Admin" });
   check("admin signs in", await signIn(admin.email, admin.password, "/admin/advertising"));
   await b.evaluate(`localStorage.setItem('dt-consent-v1', 'granted'); true`); // consent already given above; make it explicit
-  await sleep(2000); // a client-side arrival from a tracked page reloads into a clean document
-  await wait(`document.readyState === 'complete' && document.querySelector('main form [name=adsenseClientId]')`);
+  // A client-side arrival from a tracked page reloads into a clean document (NoTracking). The reload
+  // can land in the middle of a check, so poll tolerantly until the admin form is on a settled page.
+  for (let i = 0; i < 60; i++) {
+    await sleep(500);
+    try {
+      if (await b.evaluate(`document.readyState === 'complete' && !!document.querySelector('main form [name=adsenseClientId]')`)) break;
+    } catch {
+      /* page was reloading — try again */
+    }
+  }
+  await sleep(1000);
   check("admin pages never load Tag Manager", !(await gtm()));
   check("advertising nav item enabled", await b.evaluate(`!!document.querySelector('nav[aria-label=Admin] a[href="/admin/advertising"]') && !!document.querySelector('nav[aria-label=Admin] a[href="/admin/analytics"]')`));
 

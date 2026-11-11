@@ -15,3 +15,11 @@
 # package.json) because Netlify's automatic install did not run for this project.
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# The Netlify address can't be removed, so send anyone who uses it to the real domain (path kept).
+# Scoped to that one host — a catch-all rule would also loop on digitaltraffic.blog itself.
+[[redirects]]
+  from = "https://celebrated-mandazi-0edcb8.netlify.app/*"
+  to = "https://digitaltraffic.blog/:splat"
+  status = 301
+  force = true
