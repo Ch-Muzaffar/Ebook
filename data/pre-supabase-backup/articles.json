@@ -1,0 +1,72 @@
+[
+  {
+    "id": "a1000000-0000-4000-8000-000000000001",
+    "slug": "sample-article-one",
+    "title": "Sample article title for layout review",
+    "excerpt": "Placeholder excerpt. Real articles are written and published from the admin dashboard.",
+    "content": "This is a **sample article** used to review the reading experience. Replace it from the admin dashboard.\n\n## A section heading\n\nArticles are written in Markdown, so you can use *emphasis*, **bold text**, [links](https://example.com) and lists:\n\n- Short, scannable points\n- Clear structure with headings\n- Useful examples\n\n### A smaller heading\n\n> A pull quote stands out from the body text and highlights a key idea.\n\nNumbered steps work too:\n\n1. Draft the article\n2. Preview it\n3. Publish or schedule it\n\n| Format | Best for |\n| --- | --- |\n| Guide | Step-by-step learning |\n| Review | Evaluating a book |\n\nInline `code` and code blocks are supported for technical posts:\n\n```\nconst idea = \"knowledge that transforms\";\n```\n\nThat covers the main formatting options.",
+    "categories": ["technology", "digital-skills"],
+    "tags": ["sample", "writing"],
+    "author": "Author Name",
+    "authorBio": "A placeholder author bio. Replace it with a short introduction to the writer.",
+    "status": "published",
+    "publishAt": "2026-11-01T09:00:00.000Z",
+    "readingMinutes": 2,
+    "updatedAt": "2026-11-08T00:00:00.000Z"
+  },
+  {
+    "id": "a1000000-0000-4000-8000-000000000002",
+    "slug": "sample-article-two",
+    "title": "A second sample article with a slightly longer headline",
+    "excerpt": "Placeholder excerpt. Real articles are written and published from the admin dashboard.",
+    "content": "This is a sample article about finance, used to test category pages and related articles.\n\n## Why it matters\n\nPlaceholder paragraph. Replace this article with original, useful writing.",
+    "categories": ["finance"],
+    "tags": ["sample", "money"],
+    "author": "Author Name",
+    "status": "published",
+    "publishAt": "2026-10-28T09:00:00.000Z",
+    "readingMinutes": 1,
+    "updatedAt": "2026-11-08T00:00:00.000Z"
+  },
+  {
+    "id": "a1000000-0000-4000-8000-000000000003",
+    "slug": "sample-article-three",
+    "title": "Third sample article",
+    "excerpt": "Placeholder excerpt. Real articles are written and published from the admin dashboard.",
+    "content": "A short sample article in Digital Skills.\n\n## Getting started\n\nPlaceholder paragraph.",
+    "categories": ["digital-skills"],
+    "tags": ["sample"],
+    "author": "Author Name",
+    "status": "published",
+    "publishAt": "2026-10-21T09:00:00.000Z",
+    "readingMinutes": 1,
+    "updatedAt": "2026-11-08T00:00:00.000Z"
+  },
+  {
+    "id": "a1000000-0000-4000-8000-000000000004",
+    "slug": "sample-draft-article",
+    "title": "Sample draft article",
+    "excerpt": "A draft — must never appear on the public site.",
+    "content": "Draft content.",
+    "categories": ["education"],
+    "tags": [],
+    "author": "Author Name",
+    "status": "draft",
+    "readingMinutes": 1,
+    "updatedAt": "2026-11-08T00:00:00.000Z"
+  },
+  {
+    "id": "a1000000-0000-4000-8000-000000000005",
+    "slug": "sample-scheduled-article",
+    "title": "Sample scheduled article",
+    "excerpt": "Scheduled for the future — must not appear until its publish time.",
+    "content": "Scheduled content.",
+    "categories": ["business"],
+    "tags": [],
+    "author": "Author Name",
+    "status": "scheduled",
+    "publishAt": "2030-01-01T09:00:00.000Z",
+    "readingMinutes": 1,
+    "updatedAt": "2026-11-08T00:00:00.000Z"
+  }
+]

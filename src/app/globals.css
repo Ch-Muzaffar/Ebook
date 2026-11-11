@@ -1,0 +1,413 @@
+@import "tailwindcss";
+
+/*
+ * ===========================================================================
+ * DESIGN TOKENS — single source of truth
+ * ===========================================================================
+ * Every colour, font, size, spacing step, radius, shadow, width, breakpoint
+ * and motion value used by components is declared here. Tailwind v4 turns
+ * each token into utilities (e.g. --color-ivory -> bg-ivory, text-ivory).
+ * Components must use these utilities rather than raw hex/px values.
+ * JS-side motion values (for Framer Motion / R3F in Phase 2) live in
+ * src/lib/design/motion.ts and mirror the --duration-* / --ease-* tokens.
+ */
+/* `static` emits every token as a CSS variable even if no utility uses it yet,
+ * so plain-CSS and JS code can rely on var(--token) existing. */
+@theme static {
+  /* ---- Colour: PRD §4.2 brand palette ---------------------------------- */
+  --color-ivory: #f8f5ef; /* main background */
+  --color-beige: #eae3d8; /* secondary surfaces */
+  --color-charcoal: #252522; /* primary text */
+  --color-gold: #b49a67; /* accent — decorative only (contrast 2.6:1 on ivory) */
+  --color-white: #ffffff; /* cards, clean surfaces */
+
+  /* ---- Colour: derived, for accessibility & states --------------------- */
+  --color-gold-deep: #7a6640; /* accent used for TEXT/links (5.4:1 on ivory) */
+  --color-muted: #5e5a52; /* secondary text (6.4:1 on ivory) */
+  --color-line: #ddd5c7; /* hairline borders */
+  --color-charcoal-soft: #3a3a36; /* primary button hover */
+  --color-danger: #9b2c2c; /* form errors */
+  --color-success: #2f5d3a; /* confirmations */
+
+  /* ---- Colour: FIXED (never change with the theme) ---------------------- */
+  /* Printed objects — book covers, the logo mark — keep their colours in both themes. */
+  --color-ink: #252522;
+  --color-paper: #f8f5ef;
+  --color-parchment: #eae3d8;
+  --color-brass: #b49a67;
+  --color-foil-1: #8a6c3c; /* gold-foil gradient stops */
+  --color-foil-2: #e9d3a1;
+  --color-foil-3: #b08d4f;
+  --color-glow: #fffaf0; /* warm window light */
+
+  /* ---- Typography: PRD §4.3 -------------------------------------------- */
+  --font-serif: var(--font-playfair), "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Fluid type scale (min @ 360px → max @ 1280px) */
+  --text-display: clamp(2.5rem, 1.6rem + 4vw, 4.75rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: clamp(2.125rem, 1.6rem + 2.4vw, 3.5rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.015em;
+  --text-h2: clamp(1.75rem, 1.4rem + 1.5vw, 2.625rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: clamp(1.375rem, 1.2rem + 0.75vw, 1.75rem);
+  --text-h3--line-height: 1.25;
+  --text-h4: 1.25rem;
+  --text-h4--line-height: 1.35;
+  --text-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --text-lead--line-height: 1.6;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.7;
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.55;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.45;
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.16em;
+
+  /* ---- Spacing: 4px base; Tailwind derives p-4 = 1rem, etc. ------------- */
+  --spacing: 0.25rem;
+  --spacing-section: clamp(4.5rem, 3rem + 6vw, 9rem); /* vertical rhythm between sections */
+  --spacing-gutter: clamp(1.25rem, 0.75rem + 2.5vw, 3rem); /* page side padding */
+  --spacing-header: 4.5rem; /* fixed header height */
+
+  /* ---- Layout widths ---------------------------------------------------- */
+  --container-prose: 47.5rem; /* 760px reading width — PRD §9.4 */
+  --container-narrow: 40rem;
+  --container-content: 72rem;
+  --container-wide: 86rem;
+
+  /* ---- Breakpoints ------------------------------------------------------ */
+  --breakpoint-sm: 40rem; /* 640  */
+  --breakpoint-md: 48rem; /* 768  — tablet */
+  --breakpoint-lg: 64rem; /* 1024 — laptop */
+  --breakpoint-xl: 80rem; /* 1280 — desktop */
+  --breakpoint-2xl: 96rem; /* 1536 */
+
+  /* ---- Radii (restrained) ---------------------------------------------- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.875rem;
+  --radius-pill: 999px;
+
+  /* ---- Shadows (soft, warm) -------------------------------------------- */
+  --shadow-hairline: 0 0 0 1px rgb(37 37 34 / 0.06);
+  --shadow-card: 0 1px 2px rgb(37 37 34 / 0.04), 0 8px 24px -12px rgb(37 37 34 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(37 37 34 / 0.05), 0 24px 48px -20px rgb(37 37 34 / 0.22);
+  --shadow-book: 2px 0 0 rgb(0 0 0 / 0.08) inset, 0 18px 40px -18px rgb(37 37 34 / 0.45);
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 450ms;
+  --duration-scene: 900ms;
+}
+
+/* ===========================================================================
+ * THEMES — "Classic Library" (light, the @theme defaults above) and
+ * "Modern Luxury" (dark). The dark theme re-points the same semantic tokens, so every
+ * component follows automatically: ivory = page background, white = card surface,
+ * beige = secondary surface, charcoal = primary text, gold-deep = accent text.
+ * data-theme is set before first paint by the inline script in src/app/layout.tsx.
+ * ======================================================================== */
+:root {
+  color-scheme: light;
+  --grain-opacity: 0.035;
+  --grain-blend: multiply;
+  --halo: rgb(248 245 239 / 0.92);
+  --halo-soft: rgb(248 245 239 / 0.6);
+  --window-glow: rgb(255 250 240 / 0.9); /* arched-window light */
+  --window-fill: #ffffff;
+  /* Glass */
+  --glass-bg: rgb(255 253 248 / 0.62);
+  --glass-bg-strong: rgb(255 253 248 / 0.84);
+  --glass-edge: rgb(255 255 255 / 0.65);
+  --glass-line: rgb(37 37 34 / 0.09);
+  --glass-highlight: rgb(255 255 255 / 0.85);
+  --glass-shadow: 0 1px 2px rgb(37 37 34 / 0.05), 0 10px 30px -12px rgb(60 45 25 / 0.18);
+  --glass-blur: 12px;
+  /* Ambient light behind the glass (fixed to the viewport) */
+  --ambient:
+    radial-gradient(42rem 32rem at 8% -4%, rgb(180 154 103 / 0.2), transparent 70%),
+    radial-gradient(36rem 30rem at 96% 22%, rgb(143 59 46 / 0.07), transparent 70%),
+    radial-gradient(44rem 34rem at 40% 108%, rgb(180 154 103 / 0.16), transparent 70%),
+    radial-gradient(30rem 26rem at 70% 60%, rgb(47 74 58 / 0.05), transparent 70%);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ivory: #11100e;
+  --color-beige: #1b1916;
+  --color-white: #181614;
+  --color-charcoal: #f1ebdf;
+  --color-charcoal-soft: #d8cdb8;
+  --color-gold: #c9a96a;
+  --color-gold-deep: #d6b97f; /* 9.6:1 on the dark page */
+  --color-muted: #a8a093; /* 7.2:1 */
+  --color-line: #2f2b25;
+  --color-danger: #ec8a7e;
+  --color-success: #8fcf9c;
+  --shadow-hairline: 0 0 0 1px rgb(0 0 0 / 0.4);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.5), 0 12px 32px -12px rgb(0 0 0 / 0.7);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 28px 56px -20px rgb(0 0 0 / 0.85);
+  --shadow-book: 2px 0 0 rgb(0 0 0 / 0.25) inset, 0 22px 48px -16px rgb(0 0 0 / 0.9);
+  --grain-opacity: 0.045;
+  --grain-blend: soft-light;
+  --halo: rgb(17 16 14 / 0.88);
+  --halo-soft: rgb(17 16 14 / 0.55);
+  --window-glow: rgb(214 177 110 / 0.28); /* candle-gold glow at night */
+  --window-fill: #2a2318;
+  --glass-bg: rgb(30 27 23 / 0.6);
+  --glass-bg-strong: rgb(24 22 19 / 0.86);
+  --glass-edge: rgb(255 236 200 / 0.12);
+  --glass-line: rgb(255 236 200 / 0.08);
+  --glass-highlight: rgb(255 240 210 / 0.1);
+  --glass-shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 14px 36px -12px rgb(0 0 0 / 0.75);
+  --ambient:
+    radial-gradient(42rem 32rem at 8% -4%, rgb(201 169 106 / 0.16), transparent 70%),
+    radial-gradient(36rem 30rem at 96% 22%, rgb(122 46 34 / 0.2), transparent 70%),
+    radial-gradient(44rem 34rem at 40% 108%, rgb(201 169 106 / 0.12), transparent 70%),
+    radial-gradient(30rem 26rem at 70% 60%, rgb(31 58 44 / 0.22), transparent 70%);
+}
+
+/* ===========================================================================
+ * GLASS — frosted, translucent surfaces over the warm ambient light
+ * ======================================================================== */
+/* Glass for cards and panels: translucent tint, light edge and inner highlight over the soft ambient
+ * light — WITHOUT backdrop-filter. Behind cards there is only a smooth gradient, so a real blur looks
+ * the same but costs a re-blur of every card on every scroll frame (the cause of scroll lag). */
+@utility glass {
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--glass-shadow);
+}
+/* Real frosted blur — only for the few surfaces over moving content (mobile menu, cookie banner);
+ * header pills use glass-layer below. */
+@utility glass-strong {
+  background-color: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.4)) saturate(1.6);
+  backdrop-filter: blur(calc(var(--glass-blur) * 1.4)) saturate(1.6);
+  border: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--glass-shadow);
+}
+/* Layered glass: the frosting lives on a ::before layer, so the element itself never becomes the
+ * containing block for position:fixed children (the mobile menu panel lives inside a header pill). */
+@utility glass-layer {
+  position: relative;
+  z-index: 0;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+    border: 1px solid var(--glass-edge);
+    box-shadow: inset 0 1px 0 var(--glass-highlight), var(--glass-shadow);
+    transition: background-color var(--duration-slow) var(--ease-standard);
+  }
+}
+
+/* Header: a frosted bar on inner pages; fully transparent on the homepage, where the pills float
+ * over the 3D library (the hero opts in with data-overlay-header). */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: color-mix(in oklab, var(--color-ivory) 72%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-line);
+}
+html:has([data-overlay-header]) .site-header::before {
+  display: none; /* not just invisible: no blur work at all on the homepage */
+}
+html:has([data-overlay-header]) .site-header > .header-rule {
+  opacity: 0;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --glass-bg: var(--glass-bg-strong); }
+}
+
+/* Theme switch: ONE GPU cross-fade of the whole page via the View Transitions API (see setTheme),
+ * instead of animating colours on thousands of elements. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 360ms;
+  animation-timing-function: var(--ease-standard);
+}
+
+/* Warm ambient light behind everything: a fixed layer on its own GPU layer, so scrolling never
+ * repaints it (background-attachment: fixed on <body> repainted the whole page every frame). */
+.ambient-light {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--ambient);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* ===========================================================================
+ * PREMIUM SURFACES
+ * ======================================================================== */
+/* Gold foil: a metallic gradient with a slow travelling sheen. Use on LARGE text and
+ * decorative marks only (prices, numerals, rules) — the light stops are too pale for body text. */
+@utility text-foil {
+  background-image: linear-gradient(110deg, var(--color-foil-1) 0%, var(--color-foil-3) 30%, var(--color-foil-2) 45%, var(--color-foil-3) 60%, var(--color-foil-1) 100%);
+  background-size: 250% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: foil-sheen 7s var(--ease-standard) infinite;
+}
+@utility bg-foil {
+  background-image: linear-gradient(110deg, var(--color-foil-1) 0%, var(--color-foil-3) 30%, var(--color-foil-2) 45%, var(--color-foil-3) 60%, var(--color-foil-1) 100%);
+  background-size: 250% 100%;
+  animation: foil-sheen 7s var(--ease-standard) infinite;
+}
+@keyframes foil-sheen {
+  0%, 100% { background-position: 100% 0; }
+  50% { background-position: 0% 0; }
+}
+
+/* Fine paper grain over the whole site (an SVG noise tile — no image download). */
+.paper-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  /* No mix-blend-mode: blending a full-screen layer re-composites the whole page every scroll
+   * frame. A plain translucent texture on its own GPU layer costs almost nothing. */
+  will-change: transform;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.38 0 0 0 0 0.28 0 0 0 1.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+@media print {
+  .paper-grain { display: none; }
+}
+
+/* ===========================================================================
+ * PAGE TRANSITIONS (React <ViewTransition>, see src/app/(site)/template.tsx)
+ * ======================================================================== */
+::view-transition-old(.page-out) {
+  animation: 180ms var(--ease-standard) both vt-fade reverse;
+}
+::view-transition-new(.page-in) {
+  animation:
+    320ms var(--ease-editorial) 120ms both vt-fade,
+    520ms var(--ease-editorial) both vt-rise;
+}
+/* Book cover morphs from its card into the book page. */
+::view-transition-group(.morph) {
+  animation-duration: 520ms;
+  animation-timing-function: var(--ease-editorial);
+}
+/* The header stays perfectly still during page transitions. */
+::view-transition-group(site-header) { animation: none; z-index: 100; }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+@keyframes vt-fade {
+  from { opacity: 0; filter: blur(4px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes vt-rise {
+  from { transform: translateY(18px); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}
+
+/* SplitText: each word rises from behind a mask. Hidden only when scripting is on, so the text
+ * is never invisible without JavaScript; reduced motion shows it immediately. */
+.split-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em; /* room for descenders inside the mask */
+  margin-bottom: -0.08em;
+}
+.split-word > span {
+  display: inline-block;
+  transition:
+    transform 900ms var(--ease-editorial),
+    opacity 900ms var(--ease-editorial);
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-split]:not([data-shown]) .split-word > span {
+    transform: translateY(105%);
+    opacity: 0;
+  }
+}
+
+/* Mobile menu items rise in one after another. */
+@keyframes menu-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Scroll cue on the homepage hero: a short gold segment travels down the line. */
+@keyframes scroll-cue {
+  0% { transform: translateY(-100%); }
+  60%, 100% { transform: translateY(200%); }
+}
+
+/* ===========================================================================
+ * BASE
+ * ======================================================================== */
+@layer base {
+  html {
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--spacing-header) + 1rem);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    overflow-x: clip; /* guard against accidental horizontal overflow */
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-gold) 35%, transparent);
+    color: var(--color-charcoal);
+  }
+
+  /* Visible, high-contrast focus ring for keyboard users everywhere. */
+  :focus-visible {
+    outline: 2px solid var(--color-charcoal);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Reduced motion: neutralise transitions/animations site-wide. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

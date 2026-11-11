@@ -1,0 +1,13 @@
+# Files never uploaded to Vercel. Secrets stay local; production env vars are set in Vercel
+# (scripts/deploy/sync-env.mjs).
+.env*
+!.env.example
+.admin-initial-password.txt
+node_modules
+.next
+.next-test
+.vercel
+docs/screenshots
+data/.e2e-backup
+data/pre-supabase-backup
+*.log

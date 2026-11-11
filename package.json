@@ -1,0 +1,51 @@
+{
+  "name": "ebook-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "check": "npm run lint && npm run typecheck && npm run build",
+    "check:visual": "node scripts/visual-check.mjs",
+    "check:scene": "node scripts/scene-check.mjs",
+    "check:store": "node scripts/store-check.mjs",
+    "check:blog": "node scripts/blog-check.mjs",
+    "check:auth": "node scripts/auth-check.mjs",
+    "check:admin": "node scripts/admin-check.mjs",
+    "check:rls": "node scripts/db/rls-check.mjs",
+    "check:payments": "node scripts/payment-check.mjs",
+    "db:migrate": "node scripts/db/migrate.mjs",
+    "db:ping": "node scripts/db/ping.mjs",
+    "db:audit": "node scripts/db/audit.mjs",
+    "test:e2e": "node scripts/e2e.mjs"
+  },
+  "dependencies": {
+    "@react-three/fiber": "9.8.2",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.118.0",
+    "framer-motion": "14.6.0",
+    "next": "16.4.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-markdown": "10.1.0",
+    "remark-gfm": "4.0.1",
+    "three": "0.186.1",
+    "undici": "7.29.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/pg": "8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "0.186.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.5",
+    "pg": "8.23.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,10 @@
+[
+  { "id": "cat-business", "slug": "business", "name": "Business", "description": "Strategy, entrepreneurship and building things that last.", "order": 1 },
+  { "id": "cat-technology", "slug": "technology", "name": "Technology", "description": "How modern technology works and how to use it well.", "order": 2 },
+  { "id": "cat-ai", "slug": "artificial-intelligence", "name": "Artificial Intelligence", "description": "Practical, clear-eyed writing about AI.", "order": 3 },
+  { "id": "cat-self-improvement", "slug": "self-improvement", "name": "Self-Improvement", "description": "Habits, focus and personal growth.", "order": 4 },
+  { "id": "cat-education", "slug": "education", "name": "Education", "description": "Learning, teaching and studying effectively.", "order": 5 },
+  { "id": "cat-finance", "slug": "finance", "name": "Finance", "description": "Financial literacy and money decisions, explained plainly.", "order": 6 },
+  { "id": "cat-digital-skills", "slug": "digital-skills", "name": "Digital Skills", "description": "Skills for working and creating online.", "order": 7 },
+  { "id": "cat-book-reviews", "slug": "book-reviews", "name": "Book Reviews", "description": "Honest reviews of books worth your time.", "order": 8 }
+]
