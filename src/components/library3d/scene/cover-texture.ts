@@ -1,11 +1,12 @@
 import { CanvasTexture, SRGBColorSpace } from "three";
 
-export type CoverSpec = { title: string; author: string; background: string; ink: string; rule: string };
+/** `image` (optional): the product's real cover; BookModel loads it over the typographic cover. */
+export type CoverSpec = { title: string; author: string; background: string; ink: string; rule: string; image?: string };
 
 /**
  * Paints a typographic book cover onto a canvas and wraps it as a texture — no image assets
  * to download. Uses the page's Playfair Display / Inter font families (from next/font).
- * When real cover images exist (Phase 3), load them with a TextureLoader instead.
+ * Used as the placeholder while a real cover image loads, and for books without one.
  */
 export function createCoverTexture(spec: CoverSpec, maxAnisotropy = 1): CanvasTexture {
   const W = 512;

@@ -39,7 +39,7 @@ function FeaturedBook({ product, index, stateRef, tier, onSelect }: BookProps & 
   const ref = useRef<Group>(null);
   const hover = useRef(0);
   const cover = useMemo<CoverSpec>(
-    () => ({ title: product.title, author: product.author, ...COVER_TONES[product.coverTone] }),
+    () => ({ title: product.title, author: product.author, ...COVER_TONES[product.coverTone], image: product.coverImage }),
     [product],
   );
   const [x, y, z] = BOOK_STATIONS[index];

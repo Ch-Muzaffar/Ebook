@@ -80,6 +80,12 @@ for (const deviceName of ["desktop", "phone"]) {
   // Software WebGL is slow, so measure how long settling takes rather than assuming.
   // Two quiet seconds in a row: in software WebGL one frame can take >1s, which would otherwise
   // look like "settled" while the camera is still easing in.
+  // Real cover images (uploaded, possibly multi-MB) swap onto the 3D books when they arrive, which
+  // legitimately renders one more frame — so wait until the 3D scene has no cover loads pending.
+  for (let t = 0; t < 30000; t += 500) {
+    if (await b.evaluate("(document.documentElement.dataset.coversPending ?? '0') === '0'")) break;
+    await sleep(500);
+  }
   let settledAfterMs = null;
   let quiet = 0;
   for (let t = 0; t < 30000; t += 1000) {
