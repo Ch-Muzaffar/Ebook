@@ -8,7 +8,8 @@ import { NewsletterForm } from "@/components/newsletter/newsletter-form";
 import { LinkButton } from "@/components/ui/button";
 import { Eyebrow, Heading, Text } from "@/components/ui/typography";
 import { getLatestArticles, getPublishedArticles } from "@/lib/blog/queries";
-import { getFeaturedProducts, getPublishedProducts } from "@/lib/catalog/queries";
+import { getFeaturedProducts, getPublishedProducts, getSpotlightProducts } from "@/lib/catalog/queries";
+import { ProductCard } from "@/components/cards/product-card";
 import { CountUp, Magnetic, Parallax } from "@/components/motion/effects";
 import { getCategories } from "@/lib/categories/queries";
 import { getSiteSettings } from "@/lib/settings/queries";
@@ -25,8 +26,9 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
  * sections with scroll reveals. No 3D sits behind long-form text.
  */
 export default async function HomePage() {
-  const [featured, articles, categories, settings, allBooks, allArticles] = await Promise.all([
-    getFeaturedProducts(3),
+  const [featured, allFeatured, articles, categories, settings, allBooks, allArticles] = await Promise.all([
+    getSpotlightProducts(3),
+    getFeaturedProducts(Infinity),
     getLatestArticles(3),
     getCategories(),
     getSiteSettings(),
@@ -86,6 +88,28 @@ export default async function HomePage() {
           ))}
         </ul>
       </section>
+
+      {/* Featured books — every book marked "featured" in the admin (the 3D scene above shows a few). */}
+      {allFeatured.length > 0 && (
+        <Section aria-labelledby="featured-heading">
+          <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-4">
+            <div className="flex flex-col gap-3">
+              <Eyebrow>From the shelves</Eyebrow>
+              <Heading id="featured-heading" reveal>Featured books</Heading>
+            </div>
+            <LinkButton href="/books" variant="ghost" size="sm">
+              View all books
+            </LinkButton>
+          </Reveal>
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-5">
+            {allFeatured.map((p, i) => (
+              <Reveal as="li" key={p.id} delay={(i % 5) * 0.06}>
+                <ProductCard product={p} />
+              </Reveal>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       {/* Scene 3: Categories */}
       <Section tone="beige" aria-labelledby="categories-heading" className="relative">

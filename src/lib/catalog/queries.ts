@@ -5,6 +5,7 @@ import { connection } from "next/server";
 import type { Product } from "@/lib/content/types";
 import { must, PRODUCT_COLUMNS, toProduct } from "@/lib/supabase/mappers";
 import { publicDb } from "@/lib/supabase/public";
+import { getCategories } from "@/lib/categories/queries";
 import { findProduct, listAllProducts } from "./product-store";
 
 /** Cache tag for every public catalog read; admin mutations call updateTag(PRODUCTS_TAG). */
@@ -28,6 +29,21 @@ export async function getPublishedProduct(slug: string): Promise<Product | undef
 
 export async function getFeaturedProducts(limit = 3): Promise<Product[]> {
   return (await getPublishedProducts()).filter((p) => p.featured).slice(0, limit);
+}
+
+/**
+ * Homepage 3D spotlight: the newest featured book from each category (in category order),
+ * topped up with other featured books if there are fewer categories than slots.
+ */
+export async function getSpotlightProducts(limit = 3): Promise<Product[]> {
+  const [featured, categories] = await Promise.all([getFeaturedProducts(Infinity), getCategories()]);
+  const picks: Product[] = [];
+  for (const c of categories) {
+    const p = featured.find((f) => f.category === c.slug);
+    if (p && picks.length < limit) picks.push(p);
+  }
+  for (const f of featured) if (picks.length < limit && !picks.includes(f)) picks.push(f);
+  return picks;
 }
 
 /** Same category first, then the newest others. */
